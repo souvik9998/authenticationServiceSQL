@@ -31,6 +31,6 @@ app.use("/cart",cartRouter);
 app.use("/order",OrderRouter);
 app.use(addressRouter);
 
-app.listen(22, ()=>{
-    console.log(`server connected on port 22`);
+app.listen(8080, ()=>{
+    console.log(`server connected on port 8080`);
 })
