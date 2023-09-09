@@ -33,6 +33,7 @@ export const register = async(req,res) =>{
 
 export const login = async (req, res) => {
     try {
+      console.log(req.body);
       const { email, password } = req.body;
       db.query('select email from user where email = ?',[email], (error,results) =>{
         if(error){
