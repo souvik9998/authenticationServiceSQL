@@ -31,6 +31,12 @@ app.use("/cart",cartRouter);
 app.use("/order",OrderRouter);
 app.use(addressRouter);
 
+app.get('/working', (req,res)=>{
+    console.log('working');
+    res.send('api is working');
+})
+
+
 app.listen(9000, ()=>{
     console.log(`server connected on port 9000`);
 })
