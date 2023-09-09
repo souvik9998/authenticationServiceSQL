@@ -31,6 +31,6 @@ app.use("/cart",cartRouter);
 app.use("/order",OrderRouter);
 app.use(addressRouter);
 
-app.listen(3000, ()=>{
-    console.log(`server connected on port 3000`);
+app.listen(22, ()=>{
+    console.log(`server connected on port 22`);
 })
