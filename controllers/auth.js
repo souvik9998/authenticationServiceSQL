@@ -35,22 +35,23 @@ export const login = async (req, res) => {
     try {
       console.log(req.body);
       const { email, password } = req.body;
-      db.query('select email from user where email = ?',[email], (error,results) =>{
-        if(error){
-            console.log(error);
-        }
-        if(results.length = 0){
-            return res.status(400).json({msg:"you havn't registered yet"})
-        }
-        });
+      
+      if(!email || !passsword){
+        res.status(401).json({msg:'please provide email and password'})
+      }
+
         db.query('select * from user where email = ?',[email],(error,rows,fields) =>{
             if(error){
                 console.log(error);
+                return res.status(500).json({ msg: 'Internal server error' });
+            }
+            if (rows.length === 0) {
+                return res.status(400).json({ msg: "User not found" });
             }
             var password_hash=rows[0]['password'];
             const isMatch = bcrypt.compare(password,password_hash);
             if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " });
-            const token = jwt.sign({ name: rows[0].user_id }, process.env.JWT_SECRET);
+            const token = jwt.sign({ name: rows[0].user_id }, "somestrongstring");
             res.status(200).json({
                 msg:"login successfull",
                 token,

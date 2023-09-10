@@ -12,8 +12,8 @@ import OrderRouter from './routes/OrderService.js';
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({ origin: 'http://localhost:3000' }));
 
 
