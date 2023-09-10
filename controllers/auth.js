@@ -36,7 +36,7 @@ export const login = async (req, res) => {
       console.log(req.body);
       const { email, password } = req.body;
       
-      if(!email || !passsword){
+      if(!email || !password){
         res.status(401).json({msg:'please provide email and password'})
       }
 
