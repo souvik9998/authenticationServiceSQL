@@ -7,9 +7,22 @@ export const register = async(req,res) =>{
     console.log(req.body)
     try{
         const {name,email,mobileNumber,password,confirmPassword} = req.body;
+        if(!name || !email || !mobileNumber || !password || !confirmPassword){
+            return res.status(401).json({msg:'please provide all the information'})
+        }
+
+        if (password !== confirmPassword) {
+            return res.status(400).json({ msg: 'Password and confirmPassword do not match' });
+        }
+        
+        if (!isValidEmail(email)) {
+            return res.status(400).json({ msg: 'Invalid email format' });
+        }
+
         db.query('select email from user where email = ?',[email], (error,results) =>{
             if(error){
                 console.log(error);
+                return res.status(500).json({ msg: 'Internal server error' });
             }
             if(results.length > 0){
                 return res.status(400).json({msg:"email already in use"})
@@ -20,6 +33,7 @@ export const register = async(req,res) =>{
         db.query('insert into user set ?', {user_id: uuidv4(), user_name:name, email:email, mobile_number:mobileNumber, password:passwordHash},(error,results)=>{
             if(error){
                 console.log(error)
+                return res.status(500).json({ msg: 'Internal server error' });
             }
             else{
                 return res.status(201).json({msg:"successfully registered"})
@@ -27,6 +41,7 @@ export const register = async(req,res) =>{
         })
     }
     catch(err){
+        console.log(err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -39,7 +54,9 @@ export const login = async (req, res) => {
       if(!email || !password){
         res.status(401).json({msg:'please provide email and password'})
       }
-
+      if (!isValidEmail(email)) {
+        return res.status(400).json({ msg: 'Invalid email format' });
+      }
         db.query('select * from user where email = ?',[email],(error,rows,fields) =>{
             if(error){
                 console.log(error);
@@ -63,6 +80,13 @@ export const login = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+  
+
 export const isAuthorized = async(req,res) =>{
     try{
         const userId = req.user.name;
